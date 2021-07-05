@@ -53,9 +53,10 @@ def indexar_1(stemmer, name, query, filename):
     file_name = "tweets_2021-06-28.json"
     if(filename == ""):
         print()
-    else:
+    elif os.path.isfile(filename):
         file_name = filename
-    
+    else:
+        print("No existe")
     tweets = json.load(open(file_name))
     N = len(tweets)
     counter = 0
