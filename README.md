@@ -14,9 +14,9 @@ Integrantes
     - [Objetivo del proyecto](#Objetivo-del-proyecto)
 - [Generador de data](#Generador-de-data)
 - [Construcción del índice invertido](#Construcción-del-índice-invertido)
-- [Manejo de memoria secundaria](#Aspectos-importantes-de-la-implementación-de-dichas-técnicas)
-- [Ejecución óptima de consultas](#Resultados-Experimentales)
-- [Video de uso de la aplicación](#Video-de-uso-de-la-aplicación)
+- [Manejo de memoria secundaria](#Manejo-de-memoria-secundaria)
+- [Ejecución de consultas](#Ejecución-de-consultas)
+- [Video de uso de la aplicación](#Video-de-uso-de-aplicación)
 
 # Introducción
 Proyecto válido por el curso Base de Datos II del ciclo 2021-1
@@ -63,5 +63,41 @@ Una muestra de cómo se vé el índice almacenando sus valores en un archivo txt
 
 Cuando la data crece a tamaños aún mayores, para temas de optimización a veces será necesario realizar un sorted based index, en el cual el propio índice será almacenado en "bloques", siendo cada bloque una especie de índice por su cuenta. En este caso, los procesos de recuperación primero necesitarán ejecutar un algoritmo para recuperar de manera ordenada el índice adecuado.
 
-#Ejec
+# Ejecución de consultas
+Para realizar una consulta y obtener su resultado, se implementó un sistema de ranked retrieval basado en la similitud coseno entre el Query y  un documento,  en este aso, un tweet.
+
+El proceso consta de los siguientes pasos:
+
+ - Procesar la Query de la misma manera que se hizo con los documentos para hallar sus tokens.
+ - Formar un espacio vectorial con los valores de estos tokens y su peso TF-IDF respecto al  Query.
+ - Con el índice invertido, identificar los tweets que contengan esos tokens.
+ - Por cada token y documento, es calculado un TF-IDF.
+ - Se  asigna normalización a cada  valor del vector de tokes del documento, normalizando sus valores TF-IDF dividiéndolo enre su longitud.
+ - Se asigna un Score basado en la fórmula de Similitud Coseno entre esta serie de valores  normalizados.
+ - FInalmente, se devuelve el top k docuemntos de este ránking -> En nuestra aplicación se devuelve 5.
+
+La fórmulas del peso IF-IDF, que se calcula entre un token y un documento o query:
+
+<image src=https://media.discordapp.net/attachments/731643901248536657/861478340490035200/unknown.png>
+
+Fórmula del cálculo del Score de coseno de un documento en relación a un query, considerar la normalización del peso previo o posterior:
+
+<image src=https://media.discordapp.net/attachments/731643901248536657/861478369492860938/unknown.png>
+
+
+
+
+
+
+Se implementó también una interfaz visual para que cualquier usuario pueda ejecutar sin problemas cualquier query, insertando un nombre de un json de tweets del mismo formato que el usado para testearlo. Para esto, el archivo debe ser incluido en la carpeta del proyecto. En caso no exista el archivo se utilizará el que se proporciona en el repositorio.
+
+<image src=https://media.discordapp.net/attachments/731643901248536657/861478870784147507/unknown.png>
+
+Al realizar una query, los tweets del resultado (top k=5 tweets), se mostrarán en el cuadro inferior.
+
+<image src=https://media.discordapp.net/attachments/731643901248536657/861478977063616562/unknown.png?>
+
+# Video de uso de aplicación
+
+[https://youtu.be/SOhSWQLoZqs](https://youtu.be/SOhSWQLoZqs "https://youtu.be/SOhSWQLoZqs")
 
