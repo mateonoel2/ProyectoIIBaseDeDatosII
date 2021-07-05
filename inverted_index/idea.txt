@@ -1,0 +1,7 @@
+Dan Query
+
+Precalculamos N #112
+
+Parseamos el Query -> igual que se parseó los documentos
+
+Score cosine:
