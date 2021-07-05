@@ -13,7 +13,7 @@ Integrantes
 - [Introducción](#Introducción)
     - [Objetivo del proyecto](#Objetivo-del-proyecto)
 - [Generador de data](#Generador-de-data)
-- [Construcción del índice invertido](#Construcción-del-indice-invertido)
+- [Construcción del índice invertido](#Construcción-del-índice-invertido)
 - [Manejo de memoria secundaria](#Aspectos-importantes-de-la-implementación-de-dichas-técnicas)
 - [Ejecución óptima de consultas](#Resultados-Experimentales)
 - [Video de uso de la aplicación](#Video-de-uso-de-la-aplicación)
@@ -36,7 +36,32 @@ Para construir el índice invertido, como primer paso tuvimos que identificar lo
 
 
 Luego de esto, se procesó toda la información de los tweets a travésde 3 procesos:
-
+   <image src= https://media.discordapp.net/attachments/731643901248536657/861472435098222642/unknown.png>
  - Separamos el texto de los tweets en palabras -> split()
  - Removemos los Stop-Words del texto -> FIltramos comparando con la data de stop_words obtenida.
  - Aplicamos un Stem a las palabras restantes -> stem() -> Proceso en el cual las palabras se reducen a su raíz o parte significativa, en un esfuerzo por reducir el número de palabras que almcenaremos en nuestro índice.
+
+Luego de esto obtenemos una representación de cada oración del contenido en basea estas palabras, denominados tokens. Este proceso también será aplicado luego a las querys
+Por ejemplo, una oración que originalmente sería "Keiko y pedro Castillo presidentes", se vería de la siguiente manera una vez tokenizada:
+<image src=https://media.discordapp.net/attachments/731643901248536657/861473133859831828/unknown.png>
+
+Repitiendo  el proceso en los textos, podemos obtener fácilmente la lista de tokens que usaremos en la colección de documentos. Mientras obtenemos estos tokens, también iremos construyendo el índice invertido. El índice invertido es una especie de diccionario que utilizaremos para almcenar las id de los tweets que contienen el token. Para esto, cada token irá "registrando" el tweet al que perteneces, de tal manera que al iterar por todo el documento, procesaremos a la par 3 cosas:
+
+ - A qué documento pertenece un determinado token -> Si el token ya estaba en nuestro índice, se hace una especie de append con el valor del id del tweet al que pertenece. Caso contrario, se añadirá una nueva entrada al índice.
+ - Se calculará luego la longitud del tweet en una estructura global para luego recuperarla al momento de normalizarlos scores.
+ - Se contabilizará la frecuencia en la colección de cada token, simplemente contando en cuantos documentos está presente, osea cuantas veces hemos intentado añadir un id nuevo al índice.
+
+Al finalizar la iteración por la colección tendremos un gran índice de la siguiente estructura:
+
+ - Token -> Frecuencia -> id[0] -> id[1] -> .....
+
+# Manejo de memoria secundaria
+Obviamente, este índice obtenido solo puede ser almacenado en RAM si el tamaño de la colección lo permite. Para colecciones mucho más grandes, será necesario almacenar el propio índice en memoria secundaria.
+
+Una muestra de cómo se vé el índice almacenando sus valores en un archivo txt:
+<image src=https://media.discordapp.net/attachments/731643901248536657/861474847653625876/unknown.png>
+
+Cuando la data crece a tamaños aún mayores, para temas de optimización a veces será necesario realizar un sorted based index, en el cual el propio índice será almacenado en "bloques", siendo cada bloque una especie de índice por su cuenta. En este caso, los procesos de recuperación primero necesitarán ejecutar un algoritmo para recuperar de manera ordenada el índice adecuado.
+
+#Ejec
+
